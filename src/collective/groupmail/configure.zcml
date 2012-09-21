@@ -6,8 +6,11 @@
     i18n_domain="collective.groupmail">
 
   <five:registerPackage package="." initialize=".initialize" />
+  
+  <include package=".browser" />
 
   <include package="z3c.jbot" file="meta.zcml" />
+  
   <browser:templateOverrides
       directory="templates" />
       
