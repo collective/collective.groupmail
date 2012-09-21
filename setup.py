@@ -21,11 +21,12 @@ setup(name='collective.groupmail',
       # Get more strings from
       # http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
-        "Programming Language :: Python",
+        "Programming Language :: Python :: 2.6",
+        "Framework :: Plone :: 4.1",
         ],
-      keywords='',
-      author='',
-      author_email='',
+      keywords='plone group email',
+      author='Lennart Regebro',
+      author_email='regebro@gmail.com',
       url='http://svn.plone.org/svn/collective/',
       license='gpl',
       packages=find_packages('src'),
