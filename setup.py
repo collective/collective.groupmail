@@ -16,7 +16,7 @@ long_description = (
 
 setup(name='collective.groupmail',
       version=version,
-      description="",
+      description="Send feedback email to groups in Plone",
       long_description=long_description,
       # Get more strings from
       # http://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -39,7 +39,7 @@ setup(name='collective.groupmail',
           'z3c.jbot',
           # -*- Extra requirements: -*-
       ],
-      extras_require={'test': ['plone.app.testing']},
+      extras_require={'test': ['plone.app.testing', 'unittest2']},
       entry_points="""
       # -*- Entry points: -*-
       [z3c.autoinclude.plugin]

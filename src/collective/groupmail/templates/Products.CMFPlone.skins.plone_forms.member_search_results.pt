@@ -15,7 +15,7 @@
                    group_listing_allowed python: checkPermission('View Groups', here);
                    listing_allowed python: user_listing_allowed or group_listing_allowed;
                    user_results python:user_listing_allowed and search_view.searchUsersByRequest(request, sort_by='fullname') or [];
-                   group_results python:group_listing_allowed and search_view.searchGroups(sort_by='title', title=request['fullname'], groupid=request['login']) or [];
+                   group_results python:group_listing_allowed and search_view.searchGroups(sort_by='title', title=request.get('fullname'), groupid=request.get('login')) or [];
                    Batch python:modules['Products.CMFPlone'].Batch;
                    DateTime python:modules['DateTime'].DateTime;
                    b_size python:12;b_start python:0;b_start request/b_start | b_start;">
