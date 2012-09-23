@@ -21,10 +21,11 @@ class TestPermissions(unittest.TestCase):
         if login is None or password is None:
             return browser
 
-        basic_auth = 'Basic {0}'.format(
-            base64.encodestring('{0}:{1}'.format(login, password))
-            )
-        browser.addHeader('Authorization', basic_auth)
+        browser.open(self.layer['portal'].absolute_url() + '/login_form')
+        browser.getControl(name='__ac_name').value = login
+        browser.getControl(name='__ac_password').value = password
+        browser.getControl(name='submit').click()
+
         return browser
     
     
@@ -108,7 +109,6 @@ class TestPermissions(unittest.TestCase):
         browser.getControl(name='fullname').value = 'Test'
         browser.getControl(name='submit').click()
         
-        import pdb;pdb.set_trace()
         # Check that we found the group, the whole group and nothing but the group:
         self.assertTrue('Test group' in browser.contents)
         self.assertTrue('Administrators' not in browser.contents)
