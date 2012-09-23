@@ -1,5 +1,6 @@
 import base64
 import unittest2 as unittest
+import transaction
 from plone.testing import z2
 from plone.app.testing.interfaces import SITE_OWNER_NAME, TEST_USER_ID, TEST_USER_PASSWORD
 from Products.CMFCore.utils import getToolByName
@@ -37,26 +38,13 @@ class TestPermissions(unittest.TestCase):
         
         registration = getToolByName(portal, 'portal_registration')
 
-        z2.login(app['acl_users'], SITE_OWNER_NAME)
-        
-        # Ordinary user, can't do anything
-        import pdb;pdb.set_trace()
-        #acl_users.userFolderAddUser('ordinary', 'secret', ['Member'], [])
-        
-        acl_users.source_users.addUser(
-                'ordinary',
-                'ordinary',
-                'secret')
-        for role in ['Member']:
-            acl_users.portal_role_manager.doAssignRoleToPrincipal('ordinary', role)
-
-        
-        #registration.addMember('ordinary', 'secret', 
-                               #properties={
-                                   #'username': 'ordinary',
-                                   #'fullname': 'Ordinary',
-                                   #'email': 'ordinary@foo.bar'
-                               #})
+        # Ordinary user, can list users and groups, send personal emails but not send group emails
+        registration.addMember('ordinary', 'secret', 
+                               properties={
+                                   'username': 'ordinary',
+                                   'fullname': 'Ordinary',
+                                   'email': 'ordinary@foo.bar'
+                               })
 
         # Ordinary user, can list users and groups, send personal emails but not send group emails
         registration.addMember('listing', 'secret', 
@@ -92,7 +80,7 @@ class TestPermissions(unittest.TestCase):
         group_tool.addPrincipalToGroup('ordinary', 'testgroup')
         group_tool.addPrincipalToGroup('listing', 'testgroup')
 
-        z2.logout()
+        transaction.commit()
 
     def test_anonymous(self):
         portal = self.layer['portal']
@@ -111,30 +99,33 @@ class TestPermissions(unittest.TestCase):
     def test_ordinary_user(self):
         portal = self.layer['portal']
         portal_url = portal.absolute_url()
-        #browser = self.browser('ordinary', 'secret')
-        browser = self.browser(TEST_USER_ID, TEST_USER_PASSWORD)
-        import pdb;pdb.set_trace()
+        browser = self.browser('ordinary', 'secret')
 
         # Open User page
         browser.open(portal_url + '/Members')
         
         # Search for a group, lowercase partial should work:
-        browser.getControl(name='fullname').value = 'test'
+        browser.getControl(name='fullname').value = 'Test'
         browser.getControl(name='submit').click()
         
-        self.assertTrue('You are not allowed to list portal members.' not in browser.contents)
+        import pdb;pdb.set_trace()
+        # Check that we found the group, the whole group and nothing but the group:
+        self.assertTrue('Test group' in browser.contents)
+        self.assertTrue('Administrators' not in browser.contents)
+        
+        
 
-        #def test_listing_user(self):
-            #portal = self.layer['portal']
-            #portal_url = portal.absolute_url()
-            #browser = self.browser('listing', 'secret')
-            
-            ## Open User page
-            #browser.open(portal_url + '/Members')
-            
-            ## Search for a group, lowercase partial should work:
-            #browser.getControl(name='fullname').value = 'test'
-            #browser.getControl(name='submit').click()
-            
-            #self.assertTrue('You are not allowed to list portal members.' not in browser.contents)
+    #def test_listing_user(self):
+        #portal = self.layer['portal']
+        #portal_url = portal.absolute_url()
+        #browser = self.browser('listing', 'secret')
+        
+        ## Open User page
+        #browser.open(portal_url + '/Members')
+        
+        ## Search for a group, lowercase partial should work:
+        #browser.getControl(name='fullname').value = 'test'
+        #browser.getControl(name='submit').click()
+        
+        #self.assertTrue('You are not allowed to list portal members.' not in browser.contents)
         

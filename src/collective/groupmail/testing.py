@@ -13,6 +13,9 @@ class CollectiveGroupmail(PloneSandboxLayer):
 
     def setUpZope(self, app, configurationContext):
         # Load ZCML for this package
+        import z3c.jbot
+        xmlconfig.file('configure.zcml', z3c.jbot, 
+                        context=configurationContext)
         import collective.groupmail
         xmlconfig.file('configure.zcml',
                        collective.groupmail,
