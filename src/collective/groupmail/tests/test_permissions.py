@@ -7,7 +7,6 @@ from Products.CMFCore.utils import getToolByName
 
 from collective.groupmail.testing import COLLECTIVE_GROUPMAIL_FUNCTIONAL_TESTING
 
-
 class TestPermissions(unittest.TestCase):
 
     layer = COLLECTIVE_GROUPMAIL_FUNCTIONAL_TESTING
@@ -33,10 +32,13 @@ class TestPermissions(unittest.TestCase):
         portal = self.layer['portal']
         app = self.layer['app']
 
+        # Setup the mailaddress
+        portal.email_from_address = 'foo@frotz.bar'
+        portal.email_from_name = 'Admin'
+
         # Create users and groups
         acl_users = getToolByName(portal, 'acl_users')
         group_tool = getToolByName(portal, 'portal_groups')
-        
         registration = getToolByName(portal, 'portal_registration')
 
         # Ordinary user, can list users and groups, send personal emails but not send group emails
@@ -114,20 +116,35 @@ class TestPermissions(unittest.TestCase):
         self.assertTrue('Administrators' not in browser.contents)
         
         browser.getLink('Test group').click()
-        import pdb;pdb.set_trace()
-        
 
-    #def test_listing_user(self):
+        browser.getControl('Subject').value = 'Email to group'
+        browser.getControl('Message').value = 'This is the message:\nHello!\n'
+        browser.getControl('Send').click()
+        
+        self.assertTrue('Mail sent to listing@foo.bar,ordinary@foo.bar,privileged@foo.bar' in browser.contents)
+        self.assertEqual(len(portal.MailHost.messages), 3)
+
+    #def test_privileged_user(self):
         #portal = self.layer['portal']
         #portal_url = portal.absolute_url()
-        #browser = self.browser('listing', 'secret')
-        
+        #browser = self.browser('ordinary', 'secret')
+
         ## Open User page
         #browser.open(portal_url + '/Members')
         
         ## Search for a group, lowercase partial should work:
-        #browser.getControl(name='fullname').value = 'test'
+        #browser.getControl(name='fullname').value = 'Test'
         #browser.getControl(name='submit').click()
         
-        #self.assertTrue('You are not allowed to list portal members.' not in browser.contents)
+        ## Check that we found the group, the whole group and nothing but the group:
+        #self.assertTrue('Test group' in browser.contents)
+        #self.assertTrue('Administrators' not in browser.contents)
         
+        #browser.getLink('Test group').click()
+
+        #browser.getControl('Subject').value = 'Email to group'
+        #browser.getControl('Message').value = 'This is the message:\nHello!\n'
+        #browser.getControl('Send').click()
+        
+        #self.assertTrue('Mail sent to listing@foo.bar,ordinary@foo.bar,privileged@foo.bar' in browser.contents)
+        #self.assertEqual(len(portal.MailHost.messages), 3)

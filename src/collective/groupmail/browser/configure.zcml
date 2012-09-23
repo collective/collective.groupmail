@@ -20,7 +20,7 @@
       class=".groupview.GroupView"
       attribute="sendmail"
       allowed_interface=".groupview.IGroupView"
-      permission="zope.Public"
+      permission="plone.ViewGroups"
       />
 
 </configure>

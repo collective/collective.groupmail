@@ -1,5 +1,6 @@
 from zope.interface import implements, Interface
 
+from ZODB.POSException import ConflictError
 from Products.Five import BrowserView
 from Products.CMFCore.utils import getToolByName
 
@@ -24,6 +25,7 @@ class GroupView(BrowserView):
     def __init__(self, context, request):
         self.context = context
         self.request = request
+        self._group_data = None
 
     @property
     def portal_catalog(self):
@@ -33,17 +35,20 @@ class GroupView(BrowserView):
     def portal(self):
         return getToolByName(self.context, 'portal_url').getPortalObject()
     
-    def _get_group(self):
-        pass
-        
-    def grouptitle(self):
-        return "Woot!"
-    
-    def groupdescription(self):
-        return "Pyoooooooooot!"
+    @property
+    def group_info(self):
+        if self._group_data is None:
+            groupid = self.request.form.get('groupname')
+            if not groupid:
+                return {'title': 'No Group', 'description': ''}
+
+            group_tool = getToolByName(self.context, 'portal_groups')
+            self._group_data = group_tool.getGroupInfo(groupid)
+            
+        return self._group_data
 
     def sendmail(self, groupname, subject, message, referer=None):
-        """Sends an email to a group"""        
+        """Sends an email to a group"""
         plone_utils = getToolByName(self.context, 'plone_utils')
         mtool = getToolByName(self.context, 'portal_membership')
         gtool = getToolByName(self.context, 'portal_groups')
@@ -53,7 +58,7 @@ class GroupView(BrowserView):
         encoding = portal.getProperty('email_charset')
         
         if referer is None:
-            referer = urltool() + '/@@usergroup-groupdetails?groupname=' + groupname
+            referer = urltool() + '/@@group_view?groupname=' + groupname
 
         envelope_from = portal.getProperty('email_from_address')
         sender = mtool.getAuthenticatedMember()
@@ -91,11 +96,10 @@ class GroupView(BrowserView):
                 
         successes = []
         for address in addresses:
-            import pdb;pdb.set_trace()
             try:
                 message = self.context.author_feedback_template(self.context, **variables)
                 message = message.encode(encoding)
-                result = host.send(message, address, envelope_from,
+                result = host.send(message, mto=address, mfrom=envelope_from,
                                    subject=subject, charset=encoding)
                 successes.append(address)
             except ConflictError:
@@ -105,7 +109,6 @@ class GroupView(BrowserView):
                 message = _(u'Unable to send mail to ${address}: ${exception}',
                             mapping={u'exception' : exception, u'address': address})
                 plone_utils.addPortalMessage(message, 'error')
-                failures.append(address)
 
         if successes:
             plone_utils.addPortalMessage(_(u'Mail sent to') + ' ' + ','.join(successes), 'success')

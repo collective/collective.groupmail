@@ -20,11 +20,17 @@ class CollectiveGroupmail(PloneSandboxLayer):
         xmlconfig.file('configure.zcml',
                        collective.groupmail,
                        context=configurationContext)
+        import collective.MockMailHost
+        xmlconfig.file('configure.zcml',
+                       collective.MockMailHost,
+                       context=configurationContext)
         z2.installProduct(app, 'Products.PythonScripts')
+        z2.installProduct(app, 'collective.MockMailHost')
 
     def setUpPloneSite(self, portal):
         self.applyProfile(portal, 'Products.CMFPlone:plone')
         self.applyProfile(portal, 'Products.CMFPlone:plone-content')
+        self.applyProfile(portal, 'collective.MockMailHost:default')
 
 COLLECTIVE_GROUPMAIL_FIXTURE = CollectiveGroupmail()
 COLLECTIVE_GROUPMAIL_INTEGRATION_TESTING = \

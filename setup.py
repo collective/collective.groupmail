@@ -39,7 +39,7 @@ setup(name='collective.groupmail',
           'z3c.jbot',
           # -*- Extra requirements: -*-
       ],
-      extras_require={'test': ['plone.app.testing', 'unittest2']},
+      extras_require={'test': ['plone.app.testing', 'unittest2', 'collective.MockMailHost']},
       entry_points="""
       # -*- Entry points: -*-
       [z3c.autoinclude.plugin]

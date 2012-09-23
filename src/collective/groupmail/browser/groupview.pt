@@ -30,10 +30,10 @@
                 <h1 class="documentFirstHeading"
                     i18n:translate="heading_edit_groupproperties"
                     metal:define-slot="content-title">
-                    Group <span tal:content="view/grouptitle | default" tal:omit-tag="" i18n:name="groupname">unavailable</span>
+                    Group <span tal:content="view/group_info/title | default" tal:omit-tag="" i18n:name="groupname">unavailable</span>
                 </h1>
 
-                <div class="documentDescription" tal:content="view/groupdescription">
+                <div class="documentDescription" tal:content="view/group_info/description">
                 Group Description
                 </div>
 
@@ -142,7 +142,7 @@
     
                         <input type="hidden" name="form.submitted" value="1" />
                         <input type="hidden" name="groupname" value="groupname" id="groupname"
-                               tal:attributes="value view/groupname | string:"/>
+                               tal:attributes="value request/groupname | string:"/>
     
                         </form>
                     </tal:owner>
