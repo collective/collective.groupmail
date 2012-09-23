@@ -7,6 +7,12 @@
 
   <five:registerPackage package="." initialize=".initialize" />
   
+  <!-- This permission is defined in PloneCore, but available as a component permission -->
+  <permission
+     id="plone.ViewGroups"
+     title="View Groups"
+     />
+   
   <include package=".browser" />
 
   <include package="z3c.jbot" file="meta.zcml" />

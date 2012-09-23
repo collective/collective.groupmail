@@ -113,6 +113,8 @@ class TestPermissions(unittest.TestCase):
         self.assertTrue('Test group' in browser.contents)
         self.assertTrue('Administrators' not in browser.contents)
         
+        browser.getLink('Test group').click()
+        import pdb;pdb.set_trace()
         
 
     #def test_listing_user(self):

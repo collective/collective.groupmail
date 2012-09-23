@@ -6,10 +6,20 @@
 
   <browser:page
       for="*"
+      name="group_view"
+      class=".groupview.GroupView"
+      template="groupview.pt"
+      allowed_interface=".groupview.IGroupView"
+      permission="plone.ViewGroups"
+      />
+
+
+  <browser:page
+      for="*"
       name="send_group_mail"
-      class=".sendgroupmailview.SendGroupMailView"
-      attribute="send"
-      allowed_interface=".sendgroupmailview.ISendGroupMailView"
+      class=".groupview.GroupView"
+      attribute="sendmail"
+      allowed_interface=".groupview.IGroupView"
       permission="zope.Public"
       />
 

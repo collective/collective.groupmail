@@ -88,7 +88,7 @@
 
                         <strong>Group:</strong>
                         <a href="#"
-                           tal:attributes="href python:'%s/@@usergroup-groupdetails?groupname=%s' % (portal_url, groupid)">
+                           tal:attributes="href python:'%s/@@group_view?groupname=%s' % (portal_url, groupid)">
                             <span tal:content="result/title">Group Title</span>
                         </a>
                         <p tal:content="result/description"/>
