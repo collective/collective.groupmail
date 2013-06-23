@@ -46,6 +46,16 @@ class GroupView(BrowserView):
             self._group_data = group_tool.getGroupInfo(groupid)
             
         return self._group_data
+    
+    def get_members(self):
+        mtool = getToolByName(self.context, 'portal_membership')
+        gtool = getToolByName(self.context, 'portal_groups')
+
+        groupid = self.request.form.get('groupname')
+        group = gtool.getGroupById(groupid)
+        
+        return [mtool.getMemberById(memberid) for memberid in group.getAllGroupMemberIds()]
+        
 
     def sendmail(self, groupname, subject, message, referer=None):
         """Sends an email to a group"""

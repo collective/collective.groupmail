@@ -4,7 +4,7 @@ Changelog
 1.0a4 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- List group members on group contact page.
 
 
 1.0a3 (2012-09-23)

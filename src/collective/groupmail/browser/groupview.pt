@@ -36,6 +36,13 @@
                 <div class="documentDescription" tal:content="view/group_info/description">
                 Group Description
                 </div>
+                
+                Members: 
+                <tal:block repeat="member view/get_members">
+                    <a tal:attributes="href string:${portal/absolute_url}/author/${member/getId}"
+                       tal:content="python: member.getProperty('fullname')" /><tal:block 
+                       condition="not:repeat/member/end">,</tal:block>
+                </tal:block>
 
             </metal:block>
             
