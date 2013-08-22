@@ -4,7 +4,7 @@ Changelog
 1.0.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Added number of members to member view.
 
 
 1.0.1 (2013-06-25)

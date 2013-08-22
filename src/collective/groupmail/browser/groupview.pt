@@ -24,7 +24,7 @@
           Portal status message
         </div>
 
-        <div id="content">
+        <div id="content" tal:define="members view/get_members">
             <metal:block define-macro="props">
 
                 <h1 class="documentFirstHeading"
@@ -37,8 +37,8 @@
                 Group Description
                 </div>
                 
-                Members: 
-                <tal:block repeat="member view/get_members">
+                <span tal:content="python: len(members)"/> Members:
+                <tal:block repeat="member members">
                     <a tal:attributes="href string:${portal/absolute_url}/author/${member/getId}"
                        tal:content="python: member.getProperty('fullname')" /><tal:block 
                        condition="not:repeat/member/end">,</tal:block>
